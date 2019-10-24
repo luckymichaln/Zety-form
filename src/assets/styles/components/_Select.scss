@@ -3,6 +3,7 @@
   border-bottom: 1px solid gray;
   padding: 5px;
   margin-bottom: 30px;
+  transition: .2s;
 
   select,
   option {
@@ -35,6 +36,10 @@
 
   &--is-danger {
     border-color: red;
+  }
+
+  &:hover {
+    border-color: #000;
   }
 
   &::after {
