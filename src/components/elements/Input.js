@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Input = ({ label, type, value, onBlur }) => {
+const Input = ({ name, label, type, value, onBlur, onChange }) => {
   const handleOnBlur = ev => {
     onBlur()
   }
@@ -8,9 +8,11 @@ const Input = ({ label, type, value, onBlur }) => {
   return (
     <input
       type={type || 'text'}
+      name={name}
       placeholder={label}
       value={value}
       onBlur={handleOnBlur}
+      onChange={ev => onChange(ev)}
     />
   )
 }

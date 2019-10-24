@@ -1,23 +1,51 @@
-const fieldsOptions = ['Field', 'IT', 'Product', 'Content']
+const fieldsOptions = [
+  { value: 'IT', label: 'IT' },
+  { value: 'Product', label: 'Product' },
+  { value: 'Content', label: 'Content' }
+]
 
 const positionsOptions = [
   [
-    'Positions',
-    'Front-end developer',
-    'Back-end developer',
-    'Devops',
-    'Webmaster'
+    {
+      value: 'Front-end developer',
+      label: 'Front-end developer'
+    },
+    {
+      value: 'Back-end developer',
+      label: 'Back-end developer'
+    },
+    {
+      value: 'Devops',
+      label: 'Devops'
+    },
+    {
+      value: 'Webmaster',
+      label: 'Webmaster'
+    }
   ],
   [
-    'Positions',
-    'Product owner',
-    'UX Designer',
-    'UI Designer'
+    {
+      value: 'Product owner',
+      label: 'Product owner'
+    },
+    {
+      value: 'UX Designer',
+      label: 'UX Designer'
+    },
+    {
+      value: 'UI Designer',
+      label: 'UI Designer'
+    }
   ],
   [
-    'Positions',
-    'Junior Copywriter',
-    'Senior Copywriter'
+    {
+      value: 'Junior Copywriter',
+      label: 'Junior Copywriter'
+    },
+    {
+      value: 'Senior Copywriter',
+      label: 'Senior Copywriter'
+    }
   ]
 ]
 
