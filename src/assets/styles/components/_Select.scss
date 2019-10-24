@@ -1,0 +1,51 @@
+.Select {
+  position: relative;
+  border-bottom: 1px solid gray;
+  padding: 5px;
+  margin-bottom: 30px;
+
+  select,
+  option {
+    width: 100%;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+  }
+
+  &-placeholder {
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+    display: block;
+    height: 80%;
+    width: 100%;
+    font-size: 14px;
+    color: gray;
+    background-color: #fff;
+    pointer-events: none;
+  }
+
+  &-error {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: 12px;
+    color: red;
+  }
+
+  &--is-danger {
+    border-color: red;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    right: 5px;
+    z-index: 10;
+    display: block;
+    border-top: 5px solid gray;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
+}

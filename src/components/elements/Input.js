@@ -13,7 +13,7 @@ const Input = ({ name, label, type, value, onBlur, onChange, string, email, erro
 
   const inputClass = classNames({
     'Input': true,
-    'Input--error': errorMessage
+    'Input--is-danger': errorMessage
   })
 
   return (
@@ -26,7 +26,7 @@ const Input = ({ name, label, type, value, onBlur, onChange, string, email, erro
         onBlur={ev => handleOnBlur(ev)}
         onChange={ev => onChange(ev)}
       />
-      {errorMessage && <span>{errorMessage}</span>}
+      {errorMessage && <span className="Input-error">{errorMessage}</span>}
     </div>
   )
 }

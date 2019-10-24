@@ -74,6 +74,10 @@ class Form extends Component {
         this.setState(state => ({
           form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.required } }
         }));
+      } else {
+        this.setState(state => ({
+          form: { ...state.form, [key]: { ...state.form[key], errorMsg: null } }
+        }));
       }
     }
 
@@ -96,6 +100,8 @@ class Form extends Component {
         this.validate({ name: el[0], value: el[1].value });
       }
     }
+
+    console.log(form)
   }
 
   handleChange(event) {
@@ -103,7 +109,7 @@ class Form extends Component {
     const val = event.target.value;
 
     this.setState(state => ({
-      form: { ...state.form, [key]: { value: val } }
+      form: { ...state.form, [key]: { ...state.form[key], value: val } }
     }));
   }
 
@@ -127,60 +133,84 @@ class Form extends Component {
     const { activeListIndex, form } = state;
 
     return (
-      <form id="zety-form" onSubmit={handleFormSubmit}>
-        <Input
-          name="name"
-          label="Name"
-          required
-          string
-          errorMessage={form.name.errorMsg}
-          value={form.name.value}
-          onBlur={validate}
-          onChange={handleChange}
-        />
-        <Input
-          name="nickname"
-          label="Nickname"
-          string
-          errorMessage={form.nickname.errorMsg}
-          value={form.nickname.value}
-          onBlur={validate}
-          onChange={handleChange}
-        />
-        <Input
-          name="email"
-          type="email"
-          label="E-mail"
-          email
-          required
-          errorMessage={form.email.errorMsg}
-          value={form.email.value}
-          onBlur={validate}
-          onChange={handleChange}
-        />
-        <Select
-          name="field"
-          list={fieldsOptions}
-          placeholder={!!form.field.value || 'Field'}
-          required
-          errorMessage={form.field.errorMsg}
-          value={form.field.value}
-          onChange={handleFieldsChange}
-        />
-        <Select
-          name="position"
-          placeholder={!!form.position.value || 'Position'}
-          required
-          errorMessage={form.position.errorMsg}
-          list={positionsOptions[activeListIndex]}
-          value={form.position.value}
-          onChange={handleChange}
-        />
-        <Button
-          label="submit"
-          onClick={handleFormSubmit}
-        />
-      </form>
+      <>
+        <form
+          id="zety-form"
+          className="Form"
+          onSubmit={handleFormSubmit}
+        >
+          <Input
+            name="name"
+            label="Name"
+            required
+            string
+            errorMessage={form.name.errorMsg}
+            value={form.name.value}
+            onBlur={validate}
+            onChange={handleChange}
+          />
+          <Input
+            name="nickname"
+            label="Nickname"
+            string
+            errorMessage={form.nickname.errorMsg}
+            value={form.nickname.value}
+            onBlur={validate}
+            onChange={handleChange}
+          />
+          <Input
+            name="email"
+            type="email"
+            label="E-mail"
+            email
+            required
+            errorMessage={form.email.errorMsg}
+            value={form.email.value}
+            onBlur={validate}
+            onChange={handleChange}
+          />
+          <Select
+            name="field"
+            list={fieldsOptions}
+            placeholder={!!form.field.value || 'Field'}
+            required
+            errorMessage={form.field.errorMsg}
+            value={form.field.value}
+            onChange={handleFieldsChange}
+          />
+          <Select
+            name="position"
+            placeholder={!!form.position.value || 'Position'}
+            required
+            errorMessage={form.position.errorMsg}
+            list={positionsOptions[activeListIndex]}
+            value={form.position.value}
+            onChange={handleChange}
+          />
+          <Button
+            label="submit"
+            onClick={handleFormSubmit}
+          />
+        </form>
+        <div style={{ marginTop: '30px', fontSize: '16px' }}>
+          Form data
+          <div style={{ marginTop: '10px' }}>
+            <span>Name: </span> {form.name.value}
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <span>Nickname: </span> {form.nickname.value}
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <span>Email: </span> {form.email.value}
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <span>Field: </span> {form.field.value}
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <span>Position: </span> {form.position.value}
+          </div>
+        </div>
+      </>
     )
   }
 }

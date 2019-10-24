@@ -1,10 +1,13 @@
 import React from 'react'
 import classNames from 'class-names';
 
-const Select = ({ list, name, placeholder, onChange, required, errorMessage }) => {
+const Select = ({ list, name, placeholder, onChange, value, required, errorMessage }) => {
+  const handleOnChange = ev => {
+    onChange(ev)
+  }
   const SelectClass = classNames({
     'Select': true,
-    'Select--error': required && errorMessage
+    'Select--is-danger': required && errorMessage
   });
 
   const optionsList = list.map((o, i) => {
@@ -22,14 +25,16 @@ const Select = ({ list, name, placeholder, onChange, required, errorMessage }) =
 
   return (
     <div className={SelectClass}>
-      {placeholder && <span>{placeholder}</span>}
       <select
         name={name}
-        onChange={ev => onChange(ev)}
+        onChange={ev => handleOnChange(ev)}
+        selected={value}
+        value={value}
       >
         {optionsList}
       </select>
-      {((errorMessage && required)) && <span>{errorMessage}</span>}
+      {!value && <span className="Select-placeholder">{placeholder}</span>}
+      {((errorMessage && required)) && <span className="Select-error">{errorMessage}</span>}
     </div>
   )
 }
