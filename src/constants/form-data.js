@@ -49,4 +49,10 @@ const positionsOptions = [
   ]
 ]
 
-export { fieldsOptions, positionsOptions };
+const validationMessages = {
+  required: 'This fields is required',
+  string: 'This field should contain only letters',
+  email: 'This field should contain full email address'
+}
+
+export { fieldsOptions, positionsOptions, validationMessages };

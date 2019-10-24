@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from './elements/Button';
 import Input from './elements/Input';
 import Select from './elements/Select';
-import { fieldsOptions, positionsOptions } from '../constants/form-data';
+import { fieldsOptions, positionsOptions, validationMessages } from '../constants/form-data';
 
 class Form extends Component {
   constructor(props) {
@@ -10,41 +10,92 @@ class Form extends Component {
 
     this.state = {
       form: {
-        name: '',
-        nickname: '',
-        email: '',
-        field: '',
-        position: ''
+        name: {
+          value: '',
+          errorMsg: null,
+          required: true
+        },
+        nickname: {
+          value: '',
+          errorMsg: null
+        },
+        email: {
+          value: '',
+          errorMsg: null,
+          required: true,
+          validEmail: true
+        },
+        field: {
+          value: '',
+          errorMsg: null,
+          required: true
+        },
+        position: {
+          value: '',
+          errorMsg: null,
+          required: true
+        }
       },
       activeListIndex: 0
     }
 
     this.validate = this.validate.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleFieldsChange = this.handleFieldsChange.bind(this);
-    this.isName = this.isName.bind(this);
-    this.isEmail = this.isEmail.bind(this);
-    this.required = this.required.bind(this);
   }
 
-  validate(name, email, required) {
-    if (name) {
-      this.isName()
+  validate({ name, event, value, email, string }) {
+    const key = name || event.target.name;
+    const required = this.state.form[key].required;
+
+    const isString = () => {
+      var regex = /^[a-zA-Z\s]{0,}?$/;
+
+      if (!regex.test(value)) {
+        this.setState(state => ({
+          form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.string } }
+        }));
+      }
     }
 
-    if (email) {
-      this.isEmail()
+    const isEmail = () => {
+      var regex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+      if (!regex.test(value)) {
+        this.setState(state => ({
+          form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.email } }
+        }));
+      }
     }
 
-    if (required) {
-      this.required()
+    const isRequired = () => {
+      if (!value.length) {
+        this.setState(state => ({
+          form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.required } }
+        }));
+      }
     }
-    console.log(this.state.form, 'validate callback')
+
+    if (string) { isString() }
+
+    if (email) { isEmail() }
+
+    if (required) { isRequired() }
   }
 
-  handleSubmit(ev) {
+  handleFormSubmit(ev) {
     ev.preventDefault();
+    const { form } = this.state;
+    const formElements = Object.entries(form);
+
+    for (let i = 0; i < formElements.length; i++) {
+      let el = formElements[i];
+
+      if (el[1].required) {
+        this.validate({ name: el[0], value: el[1].value });
+      }
+    }
   }
 
   handleChange(event) {
@@ -52,7 +103,7 @@ class Form extends Component {
     const val = event.target.value;
 
     this.setState(state => ({
-      form: { ...state.form, [key]: val }
+      form: { ...state.form, [key]: { value: val } }
     }));
   }
 
@@ -67,40 +118,32 @@ class Form extends Component {
     this.setState({
       activeListIndex: index
     })
+
     this.handleChange(event)
   }
 
-  isName(name) {
-    var regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-    return regex.text(name);
-  }
-
-  isEmail(email) {
-    var regex = /^([a-zA-Z0-9_.+-])+\/@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return regex.test(email);
-  }
-
-  required(value) {
-    return value.length > 0;
-  }
-
   render() {
-    const { validate, handleSubmit, handleFieldsChange, handleChange, state } = this;
+    const { validate, handleFormSubmit, handleFieldsChange, handleChange, state } = this;
     const { activeListIndex, form } = state;
 
     return (
-      <form id="zety-form" onSubmit={handleSubmit}>
+      <form id="zety-form" onSubmit={handleFormSubmit}>
         <Input
           name="name"
           label="Name"
-          value={form.name}
+          required
+          string
+          errorMessage={form.name.errorMsg}
+          value={form.name.value}
           onBlur={validate}
           onChange={handleChange}
         />
         <Input
           name="nickname"
           label="Nickname"
-          value={form.nickname}
+          string
+          errorMessage={form.nickname.errorMsg}
+          value={form.nickname.value}
           onBlur={validate}
           onChange={handleChange}
         />
@@ -108,26 +151,34 @@ class Form extends Component {
           name="email"
           type="email"
           label="E-mail"
-          value={form.email}
+          email
+          required
+          errorMessage={form.email.errorMsg}
+          value={form.email.value}
           onBlur={validate}
           onChange={handleChange}
         />
         <Select
           name="field"
           list={fieldsOptions}
-          placeholder="Field"
-          value={form.field}
+          placeholder={!!form.field.value || 'Field'}
+          required
+          errorMessage={form.field.errorMsg}
+          value={form.field.value}
           onChange={handleFieldsChange}
         />
         <Select
           name="position"
-          placeholder="Position"
+          placeholder={!!form.position.value || 'Position'}
+          required
+          errorMessage={form.position.errorMsg}
           list={positionsOptions[activeListIndex]}
-          value={form.position}
+          value={form.position.value}
           onChange={handleChange}
         />
         <Button
           label="submit"
+          onClick={handleFormSubmit}
         />
       </form>
     )
