@@ -1,12 +1,11 @@
 import React from 'react'
 import classNames from 'class-names';
 
-const Input = ({ name, label, type, value, onBlur, onChange, string, email, errorMessage }) => {
-  const handleOnBlur = ev => {
+const Input = ({ name, label, type, value, onBlur, onChange, email, errorMessage }) => {
+  const handleOnBlur = event => {
     onBlur({
-      event: ev,
+      event,
       value,
-      string,
       email
     })
   }

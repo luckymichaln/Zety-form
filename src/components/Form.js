@@ -36,28 +36,25 @@ class Form extends Component {
           required: true
         }
       },
-      activeListIndex: 0
+      activeListIndex: 0,
+      formValid: false,
+      submit: false
     }
 
     this.validate = this.validate.bind(this);
+    this.checkFormValid = this.checkFormValid.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleFieldsChange = this.handleFieldsChange.bind(this);
   }
 
-  validate({ name, event, value, email, string }) {
+  componentDidUpdate() {
+    console.log(this.state.formValid, 'formValid ?')
+  }
+
+  validate({ name, event, value, email }) {
     const key = name || event.target.name;
     const required = this.state.form[key].required;
-
-    const isString = () => {
-      var regex = /^[a-zA-Z\s]{0,}?$/;
-
-      if (!regex.test(value)) {
-        this.setState(state => ({
-          form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.string } }
-        }));
-      }
-    }
 
     const isEmail = () => {
       var regex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -65,6 +62,10 @@ class Form extends Component {
       if (!regex.test(value)) {
         this.setState(state => ({
           form: { ...state.form, [key]: { ...state.form[key], errorMsg: validationMessages.email } }
+        }));
+      } else {
+        this.setState(state => ({
+          form: { ...state.form, [key]: { ...state.form[key], errorMsg: null } }
         }));
       }
     }
@@ -81,15 +82,13 @@ class Form extends Component {
       }
     }
 
-    if (string) { isString() }
-
-    if (email) { isEmail() }
-
     if (required) { isRequired() }
+    if (email) { isEmail() }
   }
 
-  handleFormSubmit(ev) {
-    ev.preventDefault();
+  handleFormSubmit(event) {
+    event.preventDefault();
+
     const { form } = this.state;
     const formElements = Object.entries(form);
 
@@ -97,11 +96,28 @@ class Form extends Component {
       let el = formElements[i];
 
       if (el[1].required) {
-        this.validate({ name: el[0], value: el[1].value });
+        this.validate({ name: el[0], value: el[1].value, email: el[1].validEmail });
       }
     }
 
-    console.log(form)
+    this.checkFormValid(formElements)
+  }
+
+  checkFormValid(list) {
+    for (let i = 0; i < list.length; i++) {
+      let el = list[i];
+
+      while (el[1].errorMsg) {
+        this.setState({
+          formValid: false
+        })
+        return false
+      }
+    }
+
+    this.setState({
+      formValid: true
+    })
   }
 
   handleChange(event) {
@@ -142,7 +158,6 @@ class Form extends Component {
           <Input
             name="name"
             label="Name"
-            required
             string
             errorMessage={form.name.errorMsg}
             value={form.name.value}
@@ -162,8 +177,7 @@ class Form extends Component {
             name="email"
             type="email"
             label="E-mail"
-            email
-            required
+            email={form.email.validEmail}
             errorMessage={form.email.errorMsg}
             value={form.email.value}
             onBlur={validate}
@@ -174,6 +188,7 @@ class Form extends Component {
             list={fieldsOptions}
             placeholder={!!form.field.value || 'Field'}
             required
+            validate={validate}
             errorMessage={form.field.errorMsg}
             value={form.field.value}
             onChange={handleFieldsChange}
@@ -182,6 +197,7 @@ class Form extends Component {
             name="position"
             placeholder={!!form.position.value || 'Position'}
             required
+            validate={validate}
             errorMessage={form.position.errorMsg}
             list={positionsOptions[activeListIndex]}
             value={form.position.value}
@@ -189,6 +205,8 @@ class Form extends Component {
           />
           <Button
             label="submit"
+            isLink
+            formValid={this.state.submitPossible}
             onClick={handleFormSubmit}
           />
         </form>

@@ -1,9 +1,10 @@
 import React from 'react'
 import classNames from 'class-names';
 
-const Select = ({ list, name, placeholder, onChange, value, required, errorMessage }) => {
+const Select = ({ list, name, placeholder, validate, onChange, value, required, errorMessage }) => {
   const handleOnChange = ev => {
     onChange(ev)
+    validate({ name: ev.target.name, value: ev.target.value })
   }
   const SelectClass = classNames({
     'Select': true,
