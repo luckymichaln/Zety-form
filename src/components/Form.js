@@ -38,7 +38,6 @@ class Form extends Component {
       },
       activeListIndex: 0,
       formValid: false,
-      submit: false
     }
 
     this.validate = this.validate.bind(this);
@@ -206,7 +205,7 @@ class Form extends Component {
           <Button
             label="submit"
             isLink
-            formValid={this.state.submitPossible}
+            formValid={false}
             onClick={handleFormSubmit}
           />
         </form>
